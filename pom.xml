@@ -2,9 +2,16 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>mine.xmz.loghunter</groupId>
   <artifactId>loghunter</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>${loghunter-version}</version>
   <packaging>pom</packaging>
   <modules>
   	<module>loghunter-core</module>
+  	<module>loghunter-controller-springmvc</module>
   </modules>
+  
+  <properties>
+		<loghunter-version>0.0.1-SNAPSHOT</loghunter-version>
+		<spring-framework-version>4.1.2.RELEASE</spring-framework-version>
+		<javax-servlet-api>2.5</javax-servlet-api>
+	</properties>
 </project>

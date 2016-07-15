@@ -2,6 +2,9 @@ package mine.xmz.loghunter.core.editor;
 
 import java.io.File;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+
 import mine.xmz.loghunter.core.LogHunterRuntimeException;
 import mine.xmz.loghunter.core.LogLevel;
 import mine.xmz.loghunter.core.conf.LogConfiguration;
@@ -23,9 +26,16 @@ public class HunterCoreEditor {
 		File configFile = LogConfiguration.getInstance().getConfigfile();
 		ConfigFileEditor editor = getLogConfigEditeExcutor(configFile);
 		editor.changeClasslevel(classType, level);
+		reloadLoggerContext();
 	}
 	
 	
+	private void reloadLoggerContext() {
+		LoggerContext ctx = (LoggerContext)LogManager.getContext(false);
+		ctx.reconfigure();
+	}
+
+
 	/**
 	 * 
 	 * @param classType
