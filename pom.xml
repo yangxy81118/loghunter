@@ -7,6 +7,7 @@
   <modules>
   	<module>loghunter-core</module>
   	<module>loghunter-controller-springmvc</module>
+  	<module>loghunter-admin</module>
   </modules>
   
   <properties>
