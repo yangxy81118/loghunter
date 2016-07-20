@@ -1,6 +1,6 @@
 package mine.xmz.loghunter.core.collector;
 
-import mine.xmz.loghunter.core.LogLevel;
+import mine.xmz.loghunter.core.bean.LogLevel;
 
 /**
  * Collect Information of this application to the LogHunter Controlling Center

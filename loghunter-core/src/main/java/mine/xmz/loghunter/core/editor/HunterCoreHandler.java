@@ -1,13 +1,16 @@
 package mine.xmz.loghunter.core.editor;
 
 import java.io.File;
+import java.io.IOException;
+
+import mine.xmz.loghunter.core.Cats;
+import mine.xmz.loghunter.core.LogHunterRuntimeException;
+import mine.xmz.loghunter.core.bean.LogConfig;
+import mine.xmz.loghunter.core.bean.LogLevel;
+import mine.xmz.loghunter.core.conf.LogConfiguration;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
-
-import mine.xmz.loghunter.core.LogHunterRuntimeException;
-import mine.xmz.loghunter.core.LogLevel;
-import mine.xmz.loghunter.core.conf.LogConfiguration;
 
 /**
  * 配置文件核心编辑逻辑处理类
@@ -15,8 +18,27 @@ import mine.xmz.loghunter.core.conf.LogConfiguration;
  * @author yangxy8
  *
  */
-public class HunterCoreEditor {
+public class HunterCoreHandler {
 
+	
+	/**
+	 * 读取本地log配置文件,暂时采用直接读取整个文件的做法
+	 * @return
+	 */
+	public String readLocalConfiguration(){
+		
+		File configFile = LogConfiguration.getInstance().getConfigfile();
+//		ConfigFileEditor editor = getLogConfigEditeExcutor(configFile);
+//		LogConfig configBean = editor.readConfig();
+		String configSource = null;
+		try {
+			configSource = Cats.readFile(configFile);
+		} catch (IOException e) {
+			throw new LogHunterRuntimeException("Read configFile error!", e);
+		}
+		return configSource;
+	}
+	
 	/**
 	 * 
 	 * @param classType
@@ -58,9 +80,9 @@ public class HunterCoreEditor {
 		return executor;
 	}
 	
-	private static final HunterCoreEditor editor = new HunterCoreEditor();
+	private static final HunterCoreHandler editor = new HunterCoreHandler();
 
-	public static final HunterCoreEditor getInstance() {
+	public static final HunterCoreHandler getInstance() {
 		return editor;
 	}
 }

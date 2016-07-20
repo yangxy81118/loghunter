@@ -8,6 +8,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
 
 public class ConnectionHolder {
 
@@ -35,6 +38,8 @@ public class ConnectionHolder {
 						@Override
 						protected void initChannel(SocketChannel channel)
 								throws Exception {
+							channel.pipeline().addLast(new ObjectDecoder(1024*1024,ClassResolvers.weakCachingConcurrentResolver(this.getClass().getClassLoader())));
+							channel.pipeline().addLast(new ObjectEncoder());
 							channel.pipeline().addLast(new CollectorMessageHandler());
 						}
 

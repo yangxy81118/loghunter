@@ -1,6 +1,7 @@
 package mine.xmz.loghunter.core.editor;
 
-import mine.xmz.loghunter.core.LogLevel;
+import mine.xmz.loghunter.core.bean.LogConfig;
+import mine.xmz.loghunter.core.bean.LogLevel;
 
 /**
  * 配置文件编辑接口
@@ -28,6 +29,12 @@ public interface ConfigFileEditor {
 	 * @param level
 	 */
 	void changeRootLevel(LogLevel level);
+
+	/**
+	 * 读取配置
+	 * @return
+	 */
+	LogConfig readConfig();
 	
 	
 }

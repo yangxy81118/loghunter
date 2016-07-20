@@ -5,9 +5,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import javax.lang.model.util.Elements;
+
+import mine.xmz.loghunter.core.Cats;
 import mine.xmz.loghunter.core.LogConfigSchema;
 import mine.xmz.loghunter.core.LogHunterRuntimeException;
-import mine.xmz.loghunter.core.LogLevel;
+import mine.xmz.loghunter.core.bean.LogConfig;
+import mine.xmz.loghunter.core.bean.LogLevel;
 
 import org.dom4j.Attribute;
 import org.dom4j.Document;
@@ -27,6 +31,9 @@ public class XMLConfigFileEditor implements ConfigFileEditor {
 
 	private File configFile;
 	private Document configDocument;
+	private Element rootNode = null;
+	private List<Element> loggersNodes = null;
+	private List<Element> appendersNodes = null;
 
 	public XMLConfigFileEditor(File configFile) {
 		this.configFile = configFile;
@@ -37,7 +44,21 @@ public class XMLConfigFileEditor implements ConfigFileEditor {
 		SAXReader reader = new SAXReader();
 		try {
 			configDocument = reader.read(configFile);
-			// TODO 这里先要做一次格式校验
+			rootNode = configDocument.getRootElement();
+			
+			//将来再做
+//			Element loggersNode = rootNode.element(LogConfigSchema.XML_LOGGERS);
+//			loggersNodes = loggersNode.elements();
+//			if(!Cats.collectionNotEmpty(loggersNodes)){
+//				throw new LogHunterRuntimeException("Logger element is required!");
+//			}
+//			
+//			Element loggersNode = rootNode.element(LogConfigSchema.XML_LOGGERS);
+//			loggersNodes = loggersNode.elements();
+//			if(!Cats.collectionNotEmpty(loggersNodes)){
+//				throw new LogHunterRuntimeException("Appender element is required!");
+//			}
+			
 		} catch (DocumentException e) {
 			throw new LogHunterRuntimeException("Read Configure File Error!", e);
 		}
@@ -146,5 +167,16 @@ public class XMLConfigFileEditor implements ConfigFileEditor {
 	public void changeRootLevel(LogLevel level) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public LogConfig readConfig() {
+
+		LogConfig config = new LogConfig();
+		Element root = configDocument.getRootElement();
+		
+		//loggers
+		
+		return null;
 	}
 }

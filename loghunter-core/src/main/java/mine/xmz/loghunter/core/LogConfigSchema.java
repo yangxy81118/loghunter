@@ -7,6 +7,8 @@ package mine.xmz.loghunter.core;
  */
 public class LogConfigSchema {
 
+	public static final String XML_APPENDERS = "Appenders";
+	
 	public static final String XML_LOGGERS = "Loggers";
 	
 	public static final String XML_LOGGER = "Logger";

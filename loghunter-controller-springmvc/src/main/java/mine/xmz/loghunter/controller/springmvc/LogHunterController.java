@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import mine.xmz.loghunter.core.LogLevel;
-import mine.xmz.loghunter.core.editor.HunterCoreEditor;
+import mine.xmz.loghunter.core.bean.LogLevel;
+import mine.xmz.loghunter.core.editor.HunterCoreHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,7 +33,7 @@ public class LogHunterController {
 	public void changeLog(@RequestParam String classType,
 			@RequestParam LogLevel level, HttpServletResponse response) {
 		try {
-			HunterCoreEditor.getInstance().changeLevel(classType, level);
+			HunterCoreHandler.getInstance().changeLevel(classType, level);
 			writeResponse(response, ControllerConstraint.CODE_SUCCESS,
 					ControllerConstraint.MSG_SUCCESS);
 		} catch (Exception e) {
@@ -49,7 +49,7 @@ public class LogHunterController {
 			HttpServletResponse response) {
 		
 		try {
-			HunterCoreEditor.getInstance().remove(classType);
+			HunterCoreHandler.getInstance().remove(classType);
 			writeResponse(response, ControllerConstraint.CODE_SUCCESS,
 					ControllerConstraint.MSG_SUCCESS);
 		} catch (Exception e) {

@@ -8,8 +8,11 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
 
-public class MyClient {
+public class ClientRegister {
 
 	public void connect() throws Exception {
 		EventLoopGroup group = new NioEventLoopGroup();
@@ -21,12 +24,17 @@ public class MyClient {
 						@Override
 						protected void initChannel(SocketChannel ch)
 								throws Exception {
-							ch.pipeline().addLast(new ClientTestHandler());
+							ch.pipeline().addLast(
+									new ObjectDecoder(1024*1024, ClassResolvers
+											.cacheDisabled(this.getClass()
+													.getClassLoader())));
+							ch.pipeline().addLast(new ObjectEncoder());
+							ch.pipeline().addLast(new ClientRegisterHandler());
 						}
 
 					});
 
-			ChannelFuture f = b.connect("127.0.0.1", 18118);
+			ChannelFuture f = b.connect("127.0.0.1", 54110);
 			f.sync();
 
 			f.channel().closeFuture().sync();
@@ -35,10 +43,10 @@ public class MyClient {
 			group.shutdownGracefully();
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		try {
-			new MyClient().connect();
+			new ClientRegister().connect();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
