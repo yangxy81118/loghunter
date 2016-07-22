@@ -17,4 +17,6 @@ public class IndexController {
 			HttpServletResponse response) throws Exception {
 		return new ModelAndView("index.html");
 	}
+	
+	
 }

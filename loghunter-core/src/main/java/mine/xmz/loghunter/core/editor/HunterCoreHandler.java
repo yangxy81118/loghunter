@@ -1,6 +1,8 @@
 package mine.xmz.loghunter.core.editor;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import mine.xmz.loghunter.core.Cats;
@@ -20,6 +22,21 @@ import org.apache.logging.log4j.core.LoggerContext;
  */
 public class HunterCoreHandler {
 
+	
+	/**
+	 * 将log4j2的配置进行覆盖
+	 * @param configSource
+	 */
+	public void coverLoggerConfig(String configSource){
+		File configFile = LogConfiguration.getInstance().getConfigfile();
+		
+		try {
+			Cats.writeFile(configSource,configFile);
+		} catch (IOException e) {
+			throw new LogHunterRuntimeException("Write configFile error!", e);
+		}
+	}
+	
 	
 	/**
 	 * 读取本地log配置文件,暂时采用直接读取整个文件的做法

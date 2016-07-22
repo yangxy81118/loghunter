@@ -56,5 +56,15 @@ public class LoggerAppContainer {
 		}
 		applicationMap.remove(appId);
 	}
+	
+	
+	/**
+	 * 获取指定
+	 * @param appId
+	 * @return
+	 */
+	public static synchronized LoggerApplication getApplication(Integer appId){
+		return applicationMap.get(appId);
+	}
 
 }

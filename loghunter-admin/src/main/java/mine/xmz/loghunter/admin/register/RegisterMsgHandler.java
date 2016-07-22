@@ -37,6 +37,8 @@ public class RegisterMsgHandler extends ChannelHandlerAdapter {
 	private String execute(LoggerApplication app) {
 		LoggerAppContainer.addApplication(app);
 		System.out.println("成功加入新注册应用,"+app.getName()+","+app.getIp()+":"+app.getPort());
+		
+		
 		return "200";
 	}
 

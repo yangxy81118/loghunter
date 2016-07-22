@@ -1,54 +1,55 @@
 package mine.xmz.loghunter.core.collector;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
+import javax.annotation.PostConstruct;
 
-public class ClientRegister {
+/**
+ * 客户端应用注册处理类<br/>
+ * 首先注册到服务端<br/>
+ * 然后启动一个本地的Netty服务监听，等候服务端的命令处理（比如修改Log4j2配置等等）
+ * 
+ * @author yangxy8
+ *
+ */
+public class ClientRegister implements InitializingBean {
 
-	public void connect() throws Exception {
-		EventLoopGroup group = new NioEventLoopGroup();
-		try {
-			Bootstrap b = new Bootstrap();
-			b.group(group).channel(NioSocketChannel.class)
-					.option(ChannelOption.TCP_NODELAY, true)
-					.handler(new ChannelInitializer<SocketChannel>() {
-						@Override
-						protected void initChannel(SocketChannel ch)
-								throws Exception {
-							ch.pipeline().addLast(
-									new ObjectDecoder(1024*1024, ClassResolvers
-											.cacheDisabled(this.getClass()
-													.getClassLoader())));
-							ch.pipeline().addLast(new ObjectEncoder());
-							ch.pipeline().addLast(new ClientRegisterHandler());
-						}
+	public ClientRegister() {
+		ClientRegisterThread registerThread = new ClientRegisterThread(
+				registerCenterPort, registerServerIp);
+		registerThread.start();
 
-					});
-
-			ChannelFuture f = b.connect("127.0.0.1", 54110);
-			f.sync();
-
-			f.channel().closeFuture().sync();
-
-		} finally {
-			group.shutdownGracefully();
-		}
+		ClientEditorThread editorThread = new ClientEditorThread(
+				registerClientPort);
+		editorThread.start();
 	}
 
-	public static void main(String[] args) {
-		try {
-			new ClientRegister().connect();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	private Integer registerCenterPort;
+
+	private String registerServerIp;
+
+	private Integer registerClientPort;
+
+	public Integer getRegisterCenterPort() {
+		return registerCenterPort;
 	}
+
+	public void setRegisterCenterPort(Integer registerCenterPort) {
+		this.registerCenterPort = registerCenterPort;
+	}
+
+	public String getRegisterServerIp() {
+		return registerServerIp;
+	}
+
+	public void setRegisterServerIp(String registerServerIp) {
+		this.registerServerIp = registerServerIp;
+	}
+
+	public Integer getRegisterClientPort() {
+		return registerClientPort;
+	}
+
+	public void setRegisterClientPort(Integer registerClientPort) {
+		this.registerClientPort = registerClientPort;
+	}
+
 }

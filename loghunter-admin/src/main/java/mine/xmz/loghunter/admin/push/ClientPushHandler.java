@@ -1,21 +1,19 @@
-package mine.xmz.loghunter.core.collector;
+package mine.xmz.loghunter.admin.push;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import mine.xmz.loghunter.core.bean.LogConfigAction;
 
-import java.util.ArrayList;
-import java.util.List;
+public class ClientPushHandler extends ChannelHandlerAdapter {
 
-import mine.xmz.loghunter.core.bean.LogConfig;
-import mine.xmz.loghunter.core.bean.LogLevel;
-import mine.xmz.loghunter.core.bean.LoggerApplication;
-import mine.xmz.loghunter.core.bean.LoggerConfig;
-import mine.xmz.loghunter.core.editor.HunterCoreHandler;
-
-public class ClientRegisterHandler extends ChannelHandlerAdapter {
-
+	private LogConfigAction action;
+	
+	public ClientPushHandler(LogConfigAction action){
+		this.action = action;
+	}
+	
+	
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
 			throws Exception {
@@ -25,17 +23,7 @@ public class ClientRegisterHandler extends ChannelHandlerAdapter {
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		
-		LoggerApplication app = new LoggerApplication();
-		app.setIp("10.201.7.245");
-		app.setName("test测试虚拟机");
-		app.setPort(18118);
-
-		app.setConfigSource(HunterCoreHandler.getInstance().readLocalConfiguration());
-		
-		//TODO 同时还要把log4j2.xml的配置内容发送到admin
-		ctx.write(app);
-		
+		ctx.write(action);
 		ctx.flush();
 	}
 

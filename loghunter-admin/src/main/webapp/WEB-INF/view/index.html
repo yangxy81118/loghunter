@@ -17,12 +17,31 @@
 	<h2>Basic Layout</h2>
 	<p>The layout contains north,south,west,east and center regions.</p>
 	<div style="margin: 20px 0;"></div>
-	<div class="easyui-layout" style="width: 700px; height: 350px;">
-		<div data-options="region:'north'" style="height: 100px"></div>
-		<div data-options="region:'south'" style="height: 500px;">
-			
+	<div class="easyui-layout" style="width: auto; height: 600px;">
+		<div data-options="region:'west'" style="width: 30%">
+			<ul id="tt" class="easyui-tree" url="/loghunter-admin/app/list">
+			</ul>
+		</div>
+		<div data-options="region:'east'" style="width: 70%">
+			<div data-options="region:'north'" style="height:50px;width:100%">
+				<div class="easyui-panel" style="padding:5px;">
+			        <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Save</a>
+			        <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Refresh Log</a>
+			    </div>
+			</div>
+			<textarea id="area" style="height:400px;width:100%;margin:20px;" rows="" cols=""></textarea>
 		</div>
 	</div>
-
 </body>
+<script type="text/javascript">
+	$(function(){
+		$('#tt').tree({
+			onClick: function(node){
+				htmlobj=$.ajax({url:"/loghunter-admin/app/info?appId="+node.id,async:false});
+				$('#area').html(htmlobj.responseText);
+			}
+		});
+	});
+
+</script>
 </html>
