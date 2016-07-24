@@ -1,6 +1,6 @@
 package mine.xmz.loghunter.core.collector;
 
-import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.InitializingBean;
 
 /**
  * 客户端应用注册处理类<br/>
@@ -11,16 +11,6 @@ import javax.annotation.PostConstruct;
  *
  */
 public class ClientRegister implements InitializingBean {
-
-	public ClientRegister() {
-		ClientRegisterThread registerThread = new ClientRegisterThread(
-				registerCenterPort, registerServerIp);
-		registerThread.start();
-
-		ClientEditorThread editorThread = new ClientEditorThread(
-				registerClientPort);
-		editorThread.start();
-	}
 
 	private Integer registerCenterPort;
 
@@ -50,6 +40,17 @@ public class ClientRegister implements InitializingBean {
 
 	public void setRegisterClientPort(Integer registerClientPort) {
 		this.registerClientPort = registerClientPort;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		ClientRegisterThread registerThread = new ClientRegisterThread(
+				registerCenterPort, registerServerIp);
+		registerThread.start();
+
+		ClientEditorThread editorThread = new ClientEditorThread(
+				registerClientPort);
+		editorThread.start();
 	}
 
 }
