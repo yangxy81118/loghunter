@@ -8,9 +8,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import mine.xmz.loghunter.admin.push.LogConfigPushDelegator;
 import mine.xmz.loghunter.admin.register.LoggerAppContainer;
+import mine.xmz.loghunter.core.bean.LogConfigAction;
 import mine.xmz.loghunter.core.bean.LoggerApplication;
+import mine.xmz.loghunter.core.pipe.netty.NettyPipe;
+import mine.xmz.loghunter.core.pipe.netty.TransferSychronizeLock;
 
 import org.dom4j.Document;
 import org.dom4j.io.OutputFormat;
@@ -69,8 +71,40 @@ public class ApplicationController {
 	public void pushAppLogConfig(HttpServletRequest request,
 			HttpServletResponse response, LogConfigForm logConfigForm){
 		
-		//先对远程log进行修改，如果成功了,再修改本地内存中的配置信息
-		LogConfigPushDelegator.pushLogConfigSource(logConfigForm.getAppId(),logConfigForm.getLogConfigSource());
+		//准备参数
+		LogConfigAction action = new LogConfigAction();
+		action.setActionCode(LogConfigAction.ACTION_LOG_CONFIG_EDIT);
+		LoggerApplication app = new LoggerApplication();
+		app.setConfigSource(logConfigForm.getLogConfigSource());
+		action.setLoggerApplication(app);
+		
+		LoggerApplication application = LoggerAppContainer
+				.getApplication(logConfigForm.getAppId());
+		String clientAppIp = application.getIp();
+		Integer clientAppPort = application.getPort();
+		
+		//同步等待!
+		String lockName = TransferSychronizeLock.LOCK_CONFIG_EDIT+clientAppIp;
+		TransferSychronizeLock.lock(lockName);
+		
+		//传输数据
+		NettyPipe nettyPipe = NettyPipe.getPIPE();
+		nettyPipe.transfer(clientAppIp, clientAppPort, action);
+		
+		synchronized (TransferSychronizeLock.class) {
+			while(TransferSychronizeLock.getLock(lockName)){
+				try {
+					TransferSychronizeLock.class.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			//结束了
+			if(!TransferSychronizeLock.getLock(lockName)){
+				System.out.println("得到反馈:"+lockName);
+			}
+		}
 		
 	}
 

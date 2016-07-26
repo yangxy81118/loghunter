@@ -5,9 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import javax.lang.model.util.Elements;
-
-import mine.xmz.loghunter.core.Cats;
 import mine.xmz.loghunter.core.LogConfigSchema;
 import mine.xmz.loghunter.core.LogHunterRuntimeException;
 import mine.xmz.loghunter.core.bean.LogConfig;

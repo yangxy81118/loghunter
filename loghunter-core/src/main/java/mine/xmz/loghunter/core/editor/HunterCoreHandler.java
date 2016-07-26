@@ -1,15 +1,12 @@
 package mine.xmz.loghunter.core.editor;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
-import mine.xmz.loghunter.core.Cats;
 import mine.xmz.loghunter.core.LogHunterRuntimeException;
-import mine.xmz.loghunter.core.bean.LogConfig;
 import mine.xmz.loghunter.core.bean.LogLevel;
 import mine.xmz.loghunter.core.conf.LogConfiguration;
+import mine.xmz.loghunter.core.support.Cats;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;

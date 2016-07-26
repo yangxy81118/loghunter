@@ -15,7 +15,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 /**
- * 应用自身
+ * 应用自身开启监听server，用来接受loghunter-admin的命令
  * 
  * @author yangxy8
  *

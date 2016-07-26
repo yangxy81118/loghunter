@@ -1,4 +1,7 @@
-package mine.xmz.loghunter.core;
+package mine.xmz.loghunter.core.support;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Collection;
 
@@ -18,6 +22,19 @@ import java.util.Collection;
  *
  */
 public class Cats {
+
+	
+	public static ByteBuf parseStrToBuf(String content){
+		return Unpooled.copiedBuffer(content.getBytes());
+	}
+	
+	public static String parseBufToStr(ByteBuf buf)
+			throws UnsupportedEncodingException {
+		byte[] req = new byte[buf.readableBytes()];
+		buf.readBytes(req);
+		String body = new String(req, "UTF-8");
+		return body;
+	}
 
 	public static boolean collectionNotEmpty(Collection collection) {
 		return collection != null && collection.size() > 0;
@@ -50,9 +67,10 @@ public class Cats {
 			writer = new BufferedWriter(new FileWriter(configFile));
 			reader = new StringReader(configSource);
 
-			char[] buf = new char[1024 * 1024];
-			while (reader.read(buf) > 0) {
-				writer.write(buf);
+			char[] buf = new char[1024*1024];
+			int end = 0;
+			while ((end = reader.read(buf)) > 0) {
+				writer.write(buf,0,end);
 			}
 		} finally {
 			closeQuitely(reader);

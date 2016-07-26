@@ -1,21 +1,14 @@
 package mine.xmz.loghunter.core.collector;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 
-import mine.xmz.loghunter.core.bean.LogConfig;
-import mine.xmz.loghunter.core.bean.LogLevel;
 import mine.xmz.loghunter.core.bean.LoggerApplication;
-import mine.xmz.loghunter.core.bean.LoggerConfig;
 import mine.xmz.loghunter.core.editor.HunterCoreHandler;
+import mine.xmz.loghunter.core.support.IpGetter;
 
 public class ClientRegisterHandler extends ChannelHandlerAdapter {
 
@@ -30,7 +23,7 @@ public class ClientRegisterHandler extends ChannelHandlerAdapter {
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 
 		LoggerApplication app = new LoggerApplication();
-		app.setIp(getLocalIP());
+		app.setIp(IpGetter.getLocalIP());
 		app.setName("test测试虚拟机");
 		app.setPort(18118);
 
@@ -43,21 +36,6 @@ public class ClientRegisterHandler extends ChannelHandlerAdapter {
 		ctx.flush();
 	}
 
-	private String getLocalIP() {
-
-		InetAddress ia = null;
-		String localip = null;
-		try {
-			ia = InetAddress.getLocalHost();
-			localip = ia.getHostAddress();
-			System.out.println("本机的ip是 ：" + localip);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return localip;
-	}
-	
-	
 	// 读取服务端的回复
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg)
@@ -75,4 +53,16 @@ public class ClientRegisterHandler extends ChannelHandlerAdapter {
 		super.channelReadComplete(ctx);
 	}
 
+	
+	public static void main(String[] args) {
+		InetAddress ia = null;
+		String localip = null;
+		try {
+			ia = InetAddress.getLocalHost();
+			localip = ia.getHostAddress();
+			System.out.println("本机的ip是 ：" + localip);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
