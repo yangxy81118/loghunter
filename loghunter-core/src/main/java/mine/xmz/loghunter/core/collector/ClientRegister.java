@@ -12,18 +12,20 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public class ClientRegister implements InitializingBean {
 
-	private Integer registerCenterPort;
+	private Integer registerServerPort;
 
 	private String registerServerIp;
 
 	private Integer registerClientPort;
 
-	public Integer getRegisterCenterPort() {
-		return registerCenterPort;
+	private String registerClientName;
+
+	public Integer getRegisterServerPort() {
+		return registerServerPort;
 	}
 
-	public void setRegisterCenterPort(Integer registerCenterPort) {
-		this.registerCenterPort = registerCenterPort;
+	public void setRegisterServerPort(Integer registerServerPort) {
+		this.registerServerPort = registerServerPort;
 	}
 
 	public String getRegisterServerIp() {
@@ -42,10 +44,19 @@ public class ClientRegister implements InitializingBean {
 		this.registerClientPort = registerClientPort;
 	}
 
+	public String getRegisterClientName() {
+		return registerClientName;
+	}
+
+	public void setRegisterClientName(String registerClientName) {
+		this.registerClientName = registerClientName;
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		ClientRegisterThread registerThread = new ClientRegisterThread(
-				registerCenterPort, registerServerIp);
+				registerServerPort, registerServerIp, registerClientName,
+				registerClientPort);
 		registerThread.start();
 
 		ClientEditorThread editorThread = new ClientEditorThread(

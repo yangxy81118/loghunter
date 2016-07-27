@@ -1,4 +1,4 @@
-package mine.xmz.loghunter.admin.register;
+package mine.xmz.loghunter.admin.service;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -21,14 +21,14 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
- * 注册中心监控核心类
+ * loghunter控制台核心管理类
  * 
  * @author yangxy8
  *
  */
 @Component
 @PropertySource("classpath:/app-core.properties")
-public class RegisterHolder {
+public class ServiceHolder {
 
 	@PostConstruct
 	public void init() {
@@ -66,7 +66,7 @@ public class RegisterHolder {
 										    .getClass()
 										    .getClassLoader())));
 					    ch.pipeline().addLast(new ObjectEncoder());
-					    ch.pipeline().addLast(new RegisterMsgHandler());
+					    ch.pipeline().addLast(new ServiceMsgHandler());
 					}
 				    });
 

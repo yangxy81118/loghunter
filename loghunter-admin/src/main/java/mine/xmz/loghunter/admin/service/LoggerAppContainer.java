@@ -1,4 +1,4 @@
-package mine.xmz.loghunter.admin.register;
+package mine.xmz.loghunter.admin.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import mine.xmz.loghunter.core.bean.LoggerApplication;
+import mine.xmz.loghunter.core.exception.IllegalClientAppNameException;
 
 /**
  * 注册来的子应用容器
@@ -16,20 +17,21 @@ import mine.xmz.loghunter.core.bean.LoggerApplication;
  */
 public class LoggerAppContainer {
 	
-	private static ConcurrentMap<Integer, LoggerApplication> applicationMap = new ConcurrentHashMap<>();
+	private static ConcurrentMap<String, LoggerApplication> applicationMap = new ConcurrentHashMap<>();
 	
 	/**
 	 * 注册新应用
 	 * 
 	 * @param application
+	 * @throws IllegalClientAppNameException 
 	 */
-	public static synchronized void addApplication(LoggerApplication application){
-		Integer appId = application.getId();
-		if(appId==null){
-			appId = applicationMap.size()+1;
-			application.setId(appId);
-		}
-		applicationMap.put(appId, application);
+	public static synchronized void addApplication(LoggerApplication application) throws IllegalClientAppNameException{
+		String appKey = application.getIp()+"_"+application.getName();
+//		if(applicationMap.containsKey(appKey)){
+//			throw new IllegalClientAppNameException(application.getIp(),application.getName());
+//		}
+		application.setKey(appKey);
+		applicationMap.put(appKey, application);
 	}
 	
 	public static synchronized List<LoggerApplication> pageApplication(int start, int rowCount){
@@ -63,8 +65,8 @@ public class LoggerAppContainer {
 	 * @param appId
 	 * @return
 	 */
-	public static synchronized LoggerApplication getApplication(Integer appId){
-		return applicationMap.get(appId);
+	public static synchronized LoggerApplication getApplication(String appKey){
+		return applicationMap.get(appKey);
 	}
-
+	
 }

@@ -2,16 +2,11 @@
 <head>
 <meta charset="UTF-8">
 <title>LogHunter Admin</title>
-<link rel="stylesheet" type="text/css"
-	href="http://o7pmdbbe0.bkt.clouddn.com/css/easyui/material/easyui.css">
-<link rel="stylesheet" type="text/css"
-	href="http://o7pmdbbe0.bkt.clouddn.com/css/easyui/icon.css">
-<link rel="stylesheet" type="text/css"
-	href="http://www.jeasyui.net/Public/js/easyui/demo/demo.css">
-<script type="text/javascript"
-	src="http://www.jeasyui.net/Public/js/jquery.js"></script>
-<script type="text/javascript"
-	src="http://o7pmdbbe0.bkt.clouddn.com/js/easyui/jquery.easyui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="http://o7pmdbbe0.bkt.clouddn.com/css/easyui/material/easyui.css">
+<link rel="stylesheet" type="text/css" href="http://o7pmdbbe0.bkt.clouddn.com/css/easyui/icon.css">
+<link rel="stylesheet" type="text/css" href="http://www.jeasyui.net/Public/js/easyui/demo/demo.css">
+<script type="text/javascript" src="http://www.jeasyui.net/Public/js/jquery.js"></script>
+<script type="text/javascript" src="http://o7pmdbbe0.bkt.clouddn.com/js/easyui/jquery.easyui.min.js"></script>
 </head>
 <body>
 	<h2>Basic Layout</h2>
@@ -23,25 +18,44 @@
 			</ul>
 		</div>
 		<div data-options="region:'east'" style="width: 70%">
-			<div data-options="region:'north'" style="height:50px;width:100%">
-				<div class="easyui-panel" style="padding:5px;">
-			        <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Save</a>
-			        <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Refresh Log</a>
-			    </div>
+			<div data-options="region:'north'" style="height: 50px; width: 100%">
+				<div class="easyui-panel" style="padding: 5px;">
+					<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'" id="save">Save</a>
+					<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Refresh Log</a>
+				</div>
 			</div>
-			<textarea id="area" style="height:400px;width:100%;margin:20px;" rows="" cols=""></textarea>
+			<textarea id="area" style="height: 400px; width: 100%; margin: 20px;" rows="" cols="" appKey=""></textarea>
 		</div>
 	</div>
 </body>
 <script type="text/javascript">
-	$(function(){
-		$('#tt').tree({
-			onClick: function(node){
-				htmlobj=$.ajax({url:"/loghunter-admin/app/info?appId="+node.id,async:false});
-				$('#area').html(htmlobj.responseText);
-			}
-		});
-	});
+	$(function() {
+		$('#tt').tree(
+				{
+					onClick : function(node) {
+						$.get("/loghunter-admin/app/info?appKey=" + node.key,
+								function(result) {
+									$('#area').html(result).attr('appKey',
+											node.key);
+								});
+					}
+				});
 
+		$('#save').click(function() {
+			var $config = $('#area').val();
+			var $appKey = $('#area').attr('appKey');
+			$.post("/loghunter-admin/app/save", {
+				"logConfigSource" : $config,
+				"appKey" : $appKey
+			}, function(result) {
+				if (result == 200) {
+					$.messager.alert('OK','Operation Success!');
+				} else {
+					$.messager.alert('Error','Operation Failed!!!');
+				}
+			}, "json");
+		});
+
+	});
 </script>
 </html>

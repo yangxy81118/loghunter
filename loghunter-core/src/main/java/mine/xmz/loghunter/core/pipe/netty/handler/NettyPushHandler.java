@@ -2,6 +2,7 @@ package mine.xmz.loghunter.core.pipe.netty.handler;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import mine.xmz.loghunter.core.bean.ActionConstraints;
 import mine.xmz.loghunter.core.bean.LogConfigAction;
 import mine.xmz.loghunter.core.pipe.netty.TransferSychronizeLock;
 
@@ -35,8 +36,8 @@ public class NettyPushHandler extends ChannelHandlerAdapter {
 			throws Exception {
 		
 		LogConfigAction action = (LogConfigAction)msg;
-		if(action.getResponseCode().equals(LogConfigAction.RESPONSE_OK)){
-			String lockName = TransferSychronizeLock.LOCK_CONFIG_EDIT+action.getLoggerApplication().getIp();
+		if(action.getResponseCode().equals(ActionConstraints.RESPONSE_OK)){
+			String lockName = TransferSychronizeLock.LOCK_CONFIG_EDIT+action.getLoggerApplication().getKey();
 			TransferSychronizeLock.release(lockName);
 			synchronized (TransferSychronizeLock.class) {
 				TransferSychronizeLock.class.notifyAll();

@@ -1,13 +1,10 @@
 package mine.xmz.loghunter.core.collector;
 
-import com.alibaba.fastjson.JSONObject;
-
-import mine.xmz.loghunter.core.bean.LogConfigAction;
-import mine.xmz.loghunter.core.editor.HunterCoreHandler;
-import mine.xmz.loghunter.core.support.Cats;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import mine.xmz.loghunter.core.bean.ActionConstraints;
+import mine.xmz.loghunter.core.bean.LogConfigAction;
+import mine.xmz.loghunter.core.editor.HunterCoreHandler;
 
 /**
  * 应用端log配置变更处理器
@@ -29,32 +26,18 @@ public class ClientEditorHandler extends ChannelHandlerAdapter {
 			throws Exception {
 		LogConfigAction action = (LogConfigAction) msg;
 		editConfiguration(action);
-		action.setResponseCode(LogConfigAction.RESPONSE_OK);
+		action.setResponseCode(ActionConstraints.RESPONSE_OK);
 		ctx.writeAndFlush(action);
-	}
-
-	private String editResponse(LogConfigAction action) {
-
-		Integer actionCode = action.getActionCode();
-		JSONObject rspsObj = new JSONObject();
-		
-		switch (actionCode) {
-		case LogConfigAction.ACTION_LOG_CONFIG_EDIT:
-			rspsObj.put("appId", action.getLoggerApplication().getId());
-			rspsObj.put("result", "200");
-			break;
-		default:
-			break;
-		}
-		return rspsObj.toJSONString();
 	}
 
 	private void editConfiguration(LogConfigAction action) {
 		Integer actionCode = action.getActionCode();
 		switch (actionCode) {
-		case LogConfigAction.ACTION_LOG_CONFIG_EDIT:
-			HunterCoreHandler.getInstance().coverLoggerConfig(
+		case ActionConstraints.ACTION_LOG_CONFIG_EDIT:
+			HunterCoreHandler coreHandler = HunterCoreHandler.getInstance();
+			coreHandler.coverLoggerConfig(
 					action.getLoggerApplication().getConfigSource());
+			coreHandler.reloadLoggerContext();
 			break;
 		default:
 			break;

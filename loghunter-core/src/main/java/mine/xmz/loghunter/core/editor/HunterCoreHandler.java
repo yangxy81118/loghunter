@@ -3,9 +3,10 @@ package mine.xmz.loghunter.core.editor;
 import java.io.File;
 import java.io.IOException;
 
-import mine.xmz.loghunter.core.LogHunterRuntimeException;
+import mine.xmz.loghunter.core.bean.ActionConstraints;
 import mine.xmz.loghunter.core.bean.LogLevel;
 import mine.xmz.loghunter.core.conf.LogConfiguration;
+import mine.xmz.loghunter.core.exception.LogHunterRuntimeException;
 import mine.xmz.loghunter.core.support.Cats;
 
 import org.apache.logging.log4j.LogManager;
@@ -19,40 +20,42 @@ import org.apache.logging.log4j.core.LoggerContext;
  */
 public class HunterCoreHandler {
 
-	
 	/**
 	 * 将log4j2的配置进行覆盖
+	 * 
 	 * @param configSource
 	 */
-	public void coverLoggerConfig(String configSource){
+	public void coverLoggerConfig(String configSource) {
 		File configFile = LogConfiguration.getInstance().getConfigfile();
-		
+
 		try {
-			Cats.writeFile(configSource,configFile);
-		} catch (IOException e) {
-			throw new LogHunterRuntimeException("Write configFile error!", e);
+			Cats.writeFile(Cats.formatXML(configSource), configFile);
+		} catch (Exception e) {
+			throw new LogHunterRuntimeException("Write configFile error!", e,
+					ActionConstraints.RESPONSE_SYSTEM_ERROR);
 		}
 	}
-	
-	
+
 	/**
 	 * 读取本地log配置文件,暂时采用直接读取整个文件的做法
+	 * 
 	 * @return
 	 */
-	public String readLocalConfiguration(){
-		
+	public String readLocalConfiguration() {
+
 		File configFile = LogConfiguration.getInstance().getConfigfile();
-//		ConfigFileEditor editor = getLogConfigEditeExcutor(configFile);
-//		LogConfig configBean = editor.readConfig();
+		// ConfigFileEditor editor = getLogConfigEditeExcutor(configFile);
+		// LogConfig configBean = editor.readConfig();
 		String configSource = null;
 		try {
 			configSource = Cats.readFile(configFile);
 		} catch (IOException e) {
-			throw new LogHunterRuntimeException("Read configFile error!", e);
+			throw new LogHunterRuntimeException("Read configFile error!", e,
+					ActionConstraints.RESPONSE_SYSTEM_ERROR);
 		}
 		return configSource;
 	}
-	
+
 	/**
 	 * 
 	 * @param classType
@@ -64,13 +67,11 @@ public class HunterCoreHandler {
 		editor.changeClasslevel(classType, level);
 		reloadLoggerContext();
 	}
-	
-	
-	private void reloadLoggerContext() {
-		LoggerContext ctx = (LoggerContext)LogManager.getContext(false);
+
+	public void reloadLoggerContext() {
+		LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 		ctx.reconfigure();
 	}
-
 
 	/**
 	 * 
@@ -88,12 +89,14 @@ public class HunterCoreHandler {
 		ConfigFileEditor executor = null;
 		if (fileName.endsWith(".xml")) {
 			executor = new XMLConfigFileEditor(configFile);
-		}else{
-			throw new LogHunterRuntimeException("non-xml file does not been supported");
+		} else {
+			throw new LogHunterRuntimeException(
+					"non-xml file does not been supported",
+					ActionConstraints.RESPONSE_SYSTEM_ERROR);
 		}
 		return executor;
 	}
-	
+
 	private static final HunterCoreHandler editor = new HunterCoreHandler();
 
 	public static final HunterCoreHandler getInstance() {

@@ -2,15 +2,15 @@ package mine.xmz.loghunter.admin.view;
 
 public class LogConfigForm {
 
-	private Integer appId;
+	private String appKey;
 	private String logConfigSource;
 
-	public Integer getAppId() {
-		return appId;
+	public String getAppKey() {
+		return appKey;
 	}
 
-	public void setAppId(Integer appId) {
-		this.appId = appId;
+	public void setAppKey(String appKey) {
+		this.appKey = appKey;
 	}
 
 	public String getLogConfigSource() {

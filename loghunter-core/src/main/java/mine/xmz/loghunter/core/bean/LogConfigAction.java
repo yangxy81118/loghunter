@@ -12,16 +12,14 @@ public class LogConfigAction implements Serializable {
 
 	private static final long serialVersionUID = 7535854628954649987L;
 
-	public static final int ACTION_LOG_CONFIG_EDIT = 1000;
-	
-	public static final int RESPONSE_OK = 200;
-
 	private Integer actionCode;
 
 	/**
 	 * 结果返回码
 	 */
 	private Integer responseCode;
+
+	private String responseMsg;
 
 	private LoggerApplication loggerApplication;
 
@@ -58,11 +56,19 @@ public class LogConfigAction implements Serializable {
 		this.responseCode = responseCode;
 	}
 
+	public String getResponseMsg() {
+		return responseMsg;
+	}
+
+	public void setResponseMsg(String responseMsg) {
+		this.responseMsg = responseMsg;
+	}
+
 	@Override
 	public String toString() {
 		return "LogConfigAction [actionCode=" + actionCode + ", responseCode="
-				+ responseCode + ", loggerApplication=" + loggerApplication
-				+ "]";
+				+ responseCode + ", responseMsg=" + responseMsg
+				+ ", loggerApplication=" + loggerApplication + "]";
 	}
 
 }

@@ -14,6 +14,8 @@ public class LoggerApplication implements Serializable {
 
 	private Integer id;
 
+	private String key;
+
 	private String ip;
 
 	private Integer port;
@@ -75,6 +77,14 @@ public class LoggerApplication implements Serializable {
 		this.configSource = configSource;
 	}
 
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
 	@Override
 	public String toString() {
 		return "LoggerApplication [id=" + id + ", ip=" + ip + ", port=" + port
@@ -82,7 +92,4 @@ public class LoggerApplication implements Serializable {
 				+ ", configSource=" + configSource + "]";
 	}
 
-
-	
-	
 }

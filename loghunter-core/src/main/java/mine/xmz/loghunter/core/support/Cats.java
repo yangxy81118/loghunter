@@ -12,9 +12,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Collection;
+
+import org.dom4j.Document;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
 
 /**
  * 
@@ -23,11 +29,10 @@ import java.util.Collection;
  */
 public class Cats {
 
-	
-	public static ByteBuf parseStrToBuf(String content){
+	public static ByteBuf parseStrToBuf(String content) {
 		return Unpooled.copiedBuffer(content.getBytes());
 	}
-	
+
 	public static String parseBufToStr(ByteBuf buf)
 			throws UnsupportedEncodingException {
 		byte[] req = new byte[buf.readableBytes()];
@@ -67,16 +72,41 @@ public class Cats {
 			writer = new BufferedWriter(new FileWriter(configFile));
 			reader = new StringReader(configSource);
 
-			char[] buf = new char[1024*1024];
+			char[] buf = new char[1024 * 1024];
 			int end = 0;
 			while ((end = reader.read(buf)) > 0) {
-				writer.write(buf,0,end);
+				writer.write(buf, 0, end);
 			}
 		} finally {
 			closeQuitely(reader);
 			closeQuitely(writer);
 		}
 
+	}
+
+	public static String formatXML(String inputXML) throws Exception {
+		SAXReader reader = new SAXReader();
+		Document document = reader.read(new StringReader(inputXML));
+		String requestXML = null;
+		XMLWriter writer = null;
+		if (document != null) {
+			try {
+				StringWriter stringWriter = new StringWriter();
+				OutputFormat format = new OutputFormat(" ", true);
+				writer = new XMLWriter(stringWriter, format);
+				writer.write(document);
+				writer.flush();
+				requestXML = stringWriter.getBuffer().toString();
+			} finally {
+				if (writer != null) {
+					try {
+						writer.close();
+					} catch (IOException e) {
+					}
+				}
+			}
+		}
+		return requestXML;
 	}
 
 	private static void closeQuitely(Reader reader) {
@@ -91,5 +121,11 @@ public class Cats {
 			reader.close();
 		} catch (IOException e) {
 		}
+	}
+
+	public static String decodeHTML(String logConfigSource) {
+		logConfigSource = logConfigSource.replace("&gt;", ">");
+		logConfigSource = logConfigSource.replace("&lt;", "<");
+		return logConfigSource;
 	}
 }

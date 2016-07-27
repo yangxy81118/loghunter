@@ -1,23 +1,19 @@
 package mine.xmz.loghunter.admin.view;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import mine.xmz.loghunter.admin.register.LoggerAppContainer;
+import mine.xmz.loghunter.admin.service.LoggerAppContainer;
+import mine.xmz.loghunter.core.bean.ActionConstraints;
 import mine.xmz.loghunter.core.bean.LogConfigAction;
 import mine.xmz.loghunter.core.bean.LoggerApplication;
 import mine.xmz.loghunter.core.pipe.netty.NettyPipe;
 import mine.xmz.loghunter.core.pipe.netty.TransferSychronizeLock;
+import mine.xmz.loghunter.core.support.Cats;
 
-import org.dom4j.Document;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.SAXReader;
-import org.dom4j.io.XMLWriter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +36,7 @@ public class ApplicationController {
 		JSONArray testArray = new JSONArray();
 		for (LoggerApplication loggerApplication : appList) {
 			JSONObject obj = new JSONObject();
-			obj.put("id", loggerApplication.getId());
+			obj.put("key", loggerApplication.getKey());
 			obj.put("text", loggerApplication.getIp()+":"+loggerApplication.getName());
 			obj.put("state", "open");
 			testArray.add(obj);
@@ -54,15 +50,15 @@ public class ApplicationController {
 
 	@RequestMapping(value = "/info")
 	public void getApplicationLogConfigSource(HttpServletRequest request,
-			HttpServletResponse response, @RequestParam Integer appId)
+			HttpServletResponse response, @RequestParam String appKey)
 			throws Exception {
 
 		LoggerApplication application = LoggerAppContainer
-				.getApplication(appId);
+				.getApplication(appKey);
 		if (application == null) {
 			response.getWriter().write("");
 		} else {
-			response.getWriter().write(formatXML(application.getConfigSource()));
+			response.getWriter().write(Cats.formatXML(application.getConfigSource()));
 		}
 	}
 	
@@ -73,18 +69,19 @@ public class ApplicationController {
 		
 		//准备参数
 		LogConfigAction action = new LogConfigAction();
-		action.setActionCode(LogConfigAction.ACTION_LOG_CONFIG_EDIT);
+		action.setActionCode(ActionConstraints.ACTION_LOG_CONFIG_EDIT);
 		LoggerApplication app = new LoggerApplication();
-		app.setConfigSource(logConfigForm.getLogConfigSource());
+		app.setConfigSource(Cats.decodeHTML(logConfigForm.getLogConfigSource()));
+		app.setKey(logConfigForm.getAppKey());
 		action.setLoggerApplication(app);
 		
 		LoggerApplication application = LoggerAppContainer
-				.getApplication(logConfigForm.getAppId());
+				.getApplication(app.getKey());
 		String clientAppIp = application.getIp();
 		Integer clientAppPort = application.getPort();
 		
 		//同步等待!
-		String lockName = TransferSychronizeLock.LOCK_CONFIG_EDIT+clientAppIp;
+		String lockName = TransferSychronizeLock.LOCK_CONFIG_EDIT+app.getKey();
 		TransferSychronizeLock.lock(lockName);
 		
 		//传输数据
@@ -102,34 +99,17 @@ public class ApplicationController {
 			
 			//结束了
 			if(!TransferSychronizeLock.getLock(lockName)){
-				System.out.println("得到反馈:"+lockName);
+				refreshContainer(action);
 			}
+		}
+		try {
+			response.getWriter().write("200");
+		} catch (IOException e) {
 		}
 		
 	}
 
-	private String formatXML(String inputXML) throws Exception {
-		SAXReader reader = new SAXReader();
-		Document document = reader.read(new StringReader(inputXML));
-		String requestXML = null;
-		XMLWriter writer = null;
-		if (document != null) {
-			try {
-				StringWriter stringWriter = new StringWriter();
-				OutputFormat format = new OutputFormat(" ", true);
-				writer = new XMLWriter(stringWriter, format);
-				writer.write(document);
-				writer.flush();
-				requestXML = stringWriter.getBuffer().toString();
-			} finally {
-				if (writer != null) {
-					try {
-						writer.close();
-					} catch (IOException e) {
-					}
-				}
-			}
-		}
-		return requestXML;
+	private void refreshContainer(LogConfigAction action) {
+		
 	}
 }
