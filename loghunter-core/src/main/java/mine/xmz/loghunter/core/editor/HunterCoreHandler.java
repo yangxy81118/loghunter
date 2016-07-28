@@ -3,9 +3,9 @@ package mine.xmz.loghunter.core.editor;
 import java.io.File;
 import java.io.IOException;
 
-import mine.xmz.loghunter.core.bean.ActionConstraints;
 import mine.xmz.loghunter.core.bean.LogLevel;
 import mine.xmz.loghunter.core.conf.LogConfiguration;
+import mine.xmz.loghunter.core.exception.ExceptionConstraints;
 import mine.xmz.loghunter.core.exception.LogHunterRuntimeException;
 import mine.xmz.loghunter.core.support.Cats;
 
@@ -32,7 +32,7 @@ public class HunterCoreHandler {
 			Cats.writeFile(Cats.formatXML(configSource), configFile);
 		} catch (Exception e) {
 			throw new LogHunterRuntimeException("Write configFile error!", e,
-					ActionConstraints.RESPONSE_SYSTEM_ERROR);
+					ExceptionConstraints.SYSTEM_ERROR);
 		}
 	}
 
@@ -51,7 +51,7 @@ public class HunterCoreHandler {
 			configSource = Cats.readFile(configFile);
 		} catch (IOException e) {
 			throw new LogHunterRuntimeException("Read configFile error!", e,
-					ActionConstraints.RESPONSE_SYSTEM_ERROR);
+					ExceptionConstraints.SYSTEM_ERROR);
 		}
 		return configSource;
 	}
@@ -92,7 +92,7 @@ public class HunterCoreHandler {
 		} else {
 			throw new LogHunterRuntimeException(
 					"non-xml file does not been supported",
-					ActionConstraints.RESPONSE_SYSTEM_ERROR);
+					ExceptionConstraints.SYSTEM_ERROR);
 		}
 		return executor;
 	}

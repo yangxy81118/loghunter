@@ -1,4 +1,4 @@
-package mine.xmz.loghunter.core.bean;
+package mine.xmz.loghunter.distribute.bean;
 
 import java.io.Serializable;
 

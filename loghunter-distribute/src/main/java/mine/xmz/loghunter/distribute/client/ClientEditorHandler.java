@@ -1,10 +1,10 @@
-package mine.xmz.loghunter.core.collector;
+package mine.xmz.loghunter.distribute.client;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import mine.xmz.loghunter.core.bean.ActionConstraints;
-import mine.xmz.loghunter.core.bean.LogConfigAction;
 import mine.xmz.loghunter.core.editor.HunterCoreHandler;
+import mine.xmz.loghunter.distribute.bean.ActionConstraints;
+import mine.xmz.loghunter.distribute.bean.LogConfigAction;
 
 /**
  * 应用端log配置变更处理器

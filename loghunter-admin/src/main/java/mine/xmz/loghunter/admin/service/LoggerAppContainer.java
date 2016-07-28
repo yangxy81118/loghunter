@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import mine.xmz.loghunter.core.bean.LoggerApplication;
-import mine.xmz.loghunter.core.exception.IllegalClientAppNameException;
+import mine.xmz.loghunter.distribute.bean.LoggerApplication;
 
 /**
  * 注册来的子应用容器
@@ -25,7 +24,7 @@ public class LoggerAppContainer {
 	 * @param application
 	 * @throws IllegalClientAppNameException 
 	 */
-	public static synchronized void addApplication(LoggerApplication application) throws IllegalClientAppNameException{
+	public static synchronized void addApplication(LoggerApplication application){
 		String appKey = application.getIp()+"_"+application.getName();
 //		if(applicationMap.containsKey(appKey)){
 //			throw new IllegalClientAppNameException(application.getIp(),application.getName());

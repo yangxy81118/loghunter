@@ -1,4 +1,4 @@
-package mine.xmz.loghunter.core.pipe.netty;
+package mine.xmz.loghunter.distribute.pipe.netty;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

@@ -1,16 +1,15 @@
-package mine.xmz.loghunter.core.pipe.netty.handler;
+package mine.xmz.loghunter.distribute.pipe.netty;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import mine.xmz.loghunter.core.bean.ActionConstraints;
-import mine.xmz.loghunter.core.bean.LogConfigAction;
-import mine.xmz.loghunter.core.pipe.netty.TransferSychronizeLock;
+import mine.xmz.loghunter.distribute.bean.ActionConstraints;
+import mine.xmz.loghunter.distribute.bean.LogConfigAction;
 
-public class NettyPushHandler extends ChannelHandlerAdapter {
+public class NettyPipeHandler extends ChannelHandlerAdapter {
 
 	private LogConfigAction actionParam;
 	
-	public NettyPushHandler(LogConfigAction actionParam) {
+	public NettyPipeHandler(LogConfigAction actionParam) {
 		this.actionParam = actionParam;
 	}
 	

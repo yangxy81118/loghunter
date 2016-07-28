@@ -1,19 +1,13 @@
 package mine.xmz.loghunter.admin.service;
 
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import mine.xmz.loghunter.admin.service.LoggerAppContainer;
 import mine.xmz.loghunter.admin.service.delegator.RegisterService;
 import mine.xmz.loghunter.admin.service.delegator.ServerEndPointService;
-import mine.xmz.loghunter.admin.support.ByteBufHelper;
-import mine.xmz.loghunter.core.bean.ActionConstraints;
-import mine.xmz.loghunter.core.bean.LogConfigAction;
-import mine.xmz.loghunter.core.bean.LoggerApplication;
-import mine.xmz.loghunter.core.exception.IllegalClientAppNameException;
+import mine.xmz.loghunter.core.exception.ExceptionConstraints;
 import mine.xmz.loghunter.core.exception.LogHunterRuntimeException;
-
-import com.alibaba.fastjson.JSONObject;
+import mine.xmz.loghunter.distribute.bean.ActionConstraints;
+import mine.xmz.loghunter.distribute.bean.LogConfigAction;
 
 /**
  * 
@@ -61,7 +55,7 @@ public class ServiceMsgHandler extends ChannelHandlerAdapter {
 			resultAction.setResponseMsg(e.getMessage());
 		} catch (Exception e) {
 			resultAction
-					.setResponseCode(ActionConstraints.RESPONSE_SYSTEM_ERROR);
+					.setResponseCode(ExceptionConstraints.SYSTEM_ERROR);
 			resultAction.setResponseMsg(e.getMessage());
 		}
 

@@ -1,7 +1,6 @@
-package mine.xmz.loghunter.core.pipe.netty;
+package mine.xmz.loghunter.distribute.pipe.netty;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -11,10 +10,8 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
-import io.netty.util.AttributeKey;
-import mine.xmz.loghunter.core.bean.LogConfigAction;
-import mine.xmz.loghunter.core.pipe.MessagePipe;
-import mine.xmz.loghunter.core.pipe.netty.handler.NettyPushHandler;
+import mine.xmz.loghunter.distribute.bean.LogConfigAction;
+import mine.xmz.loghunter.distribute.pipe.MessagePipe;
 
 /**
  * 
@@ -72,7 +69,7 @@ public class NettyPipe implements MessagePipe {
 									.cacheDisabled(this.getClass()
 											.getClassLoader())));
 					ch.pipeline().addLast(new ObjectEncoder());
-					ch.pipeline().addLast(new NettyPushHandler(actionParam));
+					ch.pipeline().addLast(new NettyPipeHandler(actionParam));
 				}
 
 			});

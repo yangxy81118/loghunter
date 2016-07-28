@@ -1,6 +1,7 @@
-package mine.xmz.loghunter.core.collector;
+package mine.xmz.loghunter.distribute.client;
 
 import org.springframework.beans.factory.InitializingBean;
+
 
 /**
  * 客户端应用注册处理类<br/>

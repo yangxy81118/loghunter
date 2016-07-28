@@ -1,19 +1,14 @@
 package mine.xmz.loghunter.core.support;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Collection;
 
@@ -28,18 +23,6 @@ import org.dom4j.io.XMLWriter;
  *
  */
 public class Cats {
-
-	public static ByteBuf parseStrToBuf(String content) {
-		return Unpooled.copiedBuffer(content.getBytes());
-	}
-
-	public static String parseBufToStr(ByteBuf buf)
-			throws UnsupportedEncodingException {
-		byte[] req = new byte[buf.readableBytes()];
-		buf.readBytes(req);
-		String body = new String(req, "UTF-8");
-		return body;
-	}
 
 	public static boolean collectionNotEmpty(Collection collection) {
 		return collection != null && collection.size() > 0;

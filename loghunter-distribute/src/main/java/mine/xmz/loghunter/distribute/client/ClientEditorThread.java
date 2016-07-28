@@ -1,4 +1,4 @@
-package mine.xmz.loghunter.core.collector;
+package mine.xmz.loghunter.distribute.client;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;

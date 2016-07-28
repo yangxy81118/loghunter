@@ -1,6 +1,8 @@
-package mine.xmz.loghunter.core.bean;
+package mine.xmz.loghunter.distribute.bean;
 
 import java.io.Serializable;
+
+import mine.xmz.loghunter.core.bean.LogConfig;
 
 /**
  * 接受监控与控制的应用单元

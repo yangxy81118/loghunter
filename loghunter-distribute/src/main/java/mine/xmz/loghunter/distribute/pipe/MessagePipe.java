@@ -1,6 +1,6 @@
-package mine.xmz.loghunter.core.pipe;
+package mine.xmz.loghunter.distribute.pipe;
 
-import mine.xmz.loghunter.core.bean.LogConfigAction;
+import mine.xmz.loghunter.distribute.bean.LogConfigAction;
 
 /**
  * 数据通信专用规范接口，用来扩展多种通信方式

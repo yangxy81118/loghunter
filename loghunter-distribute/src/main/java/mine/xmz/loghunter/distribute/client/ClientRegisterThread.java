@@ -1,11 +1,11 @@
-package mine.xmz.loghunter.core.collector;
+package mine.xmz.loghunter.distribute.client;
 
-import mine.xmz.loghunter.core.bean.ActionConstraints;
-import mine.xmz.loghunter.core.bean.LogConfigAction;
-import mine.xmz.loghunter.core.bean.LoggerApplication;
 import mine.xmz.loghunter.core.editor.HunterCoreHandler;
-import mine.xmz.loghunter.core.pipe.netty.NettyPipe;
 import mine.xmz.loghunter.core.support.IpGetter;
+import mine.xmz.loghunter.distribute.bean.ActionConstraints;
+import mine.xmz.loghunter.distribute.bean.LogConfigAction;
+import mine.xmz.loghunter.distribute.bean.LoggerApplication;
+import mine.xmz.loghunter.distribute.pipe.netty.NettyPipe;
 
 public class ClientRegisterThread extends Thread {
 

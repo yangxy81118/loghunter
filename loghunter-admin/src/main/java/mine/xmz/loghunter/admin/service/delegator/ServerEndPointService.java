@@ -1,6 +1,6 @@
 package mine.xmz.loghunter.admin.service.delegator;
 
-import mine.xmz.loghunter.core.bean.LogConfigAction;
+import mine.xmz.loghunter.distribute.bean.LogConfigAction;
 
 /**
  * 服务端业务处理标准接口

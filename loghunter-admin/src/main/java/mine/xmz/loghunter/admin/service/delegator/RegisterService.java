@@ -1,10 +1,10 @@
 package mine.xmz.loghunter.admin.service.delegator;
 
 import mine.xmz.loghunter.admin.service.LoggerAppContainer;
-import mine.xmz.loghunter.core.bean.ActionConstraints;
-import mine.xmz.loghunter.core.bean.LogConfigAction;
-import mine.xmz.loghunter.core.bean.LoggerApplication;
 import mine.xmz.loghunter.core.support.ExceptionThrow;
+import mine.xmz.loghunter.distribute.bean.ActionConstraints;
+import mine.xmz.loghunter.distribute.bean.LogConfigAction;
+import mine.xmz.loghunter.distribute.bean.LoggerApplication;
 
 /**
  * 客户端应用注册处理类

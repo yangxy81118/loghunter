@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.List;
 
 import mine.xmz.loghunter.core.LogConfigSchema;
-import mine.xmz.loghunter.core.bean.ActionConstraints;
 import mine.xmz.loghunter.core.bean.LogConfig;
 import mine.xmz.loghunter.core.bean.LogLevel;
+import mine.xmz.loghunter.core.exception.ExceptionConstraints;
 import mine.xmz.loghunter.core.exception.LogHunterRuntimeException;
 
 import org.dom4j.Attribute;
@@ -63,7 +63,7 @@ public class XMLConfigFileEditor implements ConfigFileEditor {
 
 		} catch (DocumentException e) {
 			throw new LogHunterRuntimeException("Read Configure File Error!",
-					e, ActionConstraints.RESPONSE_SYSTEM_ERROR);
+					e, ExceptionConstraints.SYSTEM_ERROR);
 		}
 	}
 
@@ -105,7 +105,7 @@ public class XMLConfigFileEditor implements ConfigFileEditor {
 		if (loggerParentNode == null) {
 			throw new LogHunterRuntimeException(
 					"Config file does not contain node[Loggers]",
-					ActionConstraints.RESPONSE_SYSTEM_ERROR);
+					ExceptionConstraints.SYSTEM_ERROR);
 		}
 
 		return loggerParentNode;
@@ -119,7 +119,7 @@ public class XMLConfigFileEditor implements ConfigFileEditor {
 			writer.write(configDocument);
 		} catch (IOException e) {
 			throw new LogHunterRuntimeException("Fail to write configuration",
-					e, ActionConstraints.RESPONSE_SYSTEM_ERROR);
+					e, ExceptionConstraints.SYSTEM_ERROR);
 		} finally {
 			try {
 				writer.close();
