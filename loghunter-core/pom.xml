@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>mine.xmz.loghunter</groupId>
 		<artifactId>loghunter</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${loghunter-version}</version>
 	</parent>
 	<artifactId>loghunter-core</artifactId>
 	<packaging>jar</packaging>
@@ -37,7 +37,19 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.2.14</version>
 		</dependency>
-		
+
+		<!-- 尝试对log4j进行优化 -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.21</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+
 		<!-- spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
