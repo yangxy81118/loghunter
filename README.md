@@ -1,5 +1,7 @@
 
-## 目标
+## Goal 目标
+It's a log4j enhancement Middleware to make programers much easiler to change the Log4j config in real-time , in other word , without restarting any server. So you change the Logger Level you want and ,immediately, you can see the appropriate logs.
+
 LogHunter旨在构建一个让程序员便捷的在分布式系统中定位到异常数据的中间件。这是一个远大而且可以无限持续优化的项目。
 目前现阶段，已经实现，**让基于Log4j2的工程实时变更日志配置**，比如你可以将一个正常为INFO级别的类日志实时变为DEBUG级别，
 这样可以快速检查各个系统的数据流入与流出的正确性。当然，这个也依赖程序员对Log日志的分级别埋点的良好习惯有关。
