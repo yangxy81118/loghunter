@@ -27,6 +27,10 @@ public class Cats {
 	public static boolean collectionNotEmpty(Collection collection) {
 		return collection != null && collection.size() > 0;
 	}
+	
+	public static boolean arrayNotEmpty(Object[] array) {
+		return array != null && array.length > 0;
+	}
 
 	public static String readFile(File configFile) throws IOException {
 
@@ -111,4 +115,6 @@ public class Cats {
 		logConfigSource = logConfigSource.replace("&lt;", "<");
 		return logConfigSource;
 	}
+
+
 }

@@ -3,6 +3,7 @@ package com.github.yangxy81118.loghunter.core.editor;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.dom4j.Attribute;
@@ -15,8 +16,10 @@ import org.dom4j.io.XMLWriter;
 import com.github.yangxy81118.loghunter.core.LogConfigSchema;
 import com.github.yangxy81118.loghunter.core.bean.LogConfig;
 import com.github.yangxy81118.loghunter.core.bean.LogLevel;
+import com.github.yangxy81118.loghunter.core.bean.LoggerConfig;
 import com.github.yangxy81118.loghunter.core.exception.ExceptionConstraints;
 import com.github.yangxy81118.loghunter.core.exception.LogHunterRuntimeException;
+import com.github.yangxy81118.loghunter.core.support.Cats;
 
 /**
  * xml配置文件修改工具<br/>
@@ -25,53 +28,22 @@ import com.github.yangxy81118.loghunter.core.exception.LogHunterRuntimeException
  * @author yangxy8
  *
  */
-public class XMLConfigFileEditor implements ConfigFileEditor {
+public class XMLLog4j2ConfigEditor implements ConfigFileEditor {
 
 	private File configFile;
 	private Document configDocument;
 	private Element rootNode = null;
-	private List<Element> loggersNodes = null;
-	private List<Element> appendersNodes = null;
+	private List<Element> loggerNodes;
+	private List<Element> appendersNodes;
+	private Element loggersParentNode;
 
-	public XMLConfigFileEditor(File configFile) {
+	public XMLLog4j2ConfigEditor(File configFile) {
 		this.configFile = configFile;
-		readDoc();
-	}
-
-	private void readDoc() {
-		SAXReader reader = new SAXReader();
-		try {
-			configDocument = reader.read(configFile);
-			rootNode = configDocument.getRootElement();
-
-			// 将来再做
-			// Element loggersNode =
-			// rootNode.element(LogConfigSchema.XML_LOGGERS);
-			// loggersNodes = loggersNode.elements();
-			// if(!Cats.collectionNotEmpty(loggersNodes)){
-			// throw new
-			// LogHunterRuntimeException("Logger element is required!");
-			// }
-			//
-			// Element loggersNode =
-			// rootNode.element(LogConfigSchema.XML_LOGGERS);
-			// loggersNodes = loggersNode.elements();
-			// if(!Cats.collectionNotEmpty(loggersNodes)){
-			// throw new
-			// LogHunterRuntimeException("Appender element is required!");
-			// }
-
-		} catch (DocumentException e) {
-			throw new LogHunterRuntimeException("Read Configure File Error!",
-					e, ExceptionConstraints.SYSTEM_ERROR);
-		}
+		readConfig();
 	}
 
 	@Override
 	public void changeClasslevel(String classType, LogLevel level) {
-		Element loggerParentNode = getLoggerParentNode();
-		List loggerNodes = loggerParentNode.elements();
-
 		boolean findClassType = false;
 		for (int i = 0; i < loggerNodes.size(); i++) {
 			Element childNode = (Element) loggerNodes.get(i);
@@ -90,25 +62,10 @@ public class XMLConfigFileEditor implements ConfigFileEditor {
 		}
 
 		if (!findClassType) {
-			createLoggerNode(loggerParentNode, classType, level);
+			createLoggerNode(classType, level);
 		}
 		writeToFile();
 
-	}
-
-	private Element getLoggerParentNode() {
-
-		Element rootNode = configDocument.getRootElement();
-		Element loggerParentNode = rootNode
-				.element(LogConfigSchema.XML_LOGGERS);
-
-		if (loggerParentNode == null) {
-			throw new LogHunterRuntimeException(
-					"Config file does not contain node[Loggers]",
-					ExceptionConstraints.SYSTEM_ERROR);
-		}
-
-		return loggerParentNode;
 	}
 
 	private void writeToFile() {
@@ -128,9 +85,10 @@ public class XMLConfigFileEditor implements ConfigFileEditor {
 		}
 	}
 
-	private void createLoggerNode(Element loggerParentNode, String classType,
+	//TODO 优化appender
+	private void createLoggerNode(String classType,
 			LogLevel level) {
-		Element loggerElmt = loggerParentNode
+		Element loggerElmt = loggersParentNode
 				.addElement(LogConfigSchema.XML_LOGGER);
 		loggerElmt.addAttribute(LogConfigSchema.XML_LOGGER_NAME, classType);
 		loggerElmt.addAttribute(LogConfigSchema.XML_LOGGER_LEVEL,
@@ -149,9 +107,6 @@ public class XMLConfigFileEditor implements ConfigFileEditor {
 
 	@Override
 	public void remove(String classType) {
-		Element loggerParentNode = getLoggerParentNode();
-		List loggerNodes = loggerParentNode.elements();
-
 		boolean findClassType = false;
 		for (int i = 0; i < loggerNodes.size(); i++) {
 			Element childNode = (Element) loggerNodes.get(i);
@@ -161,7 +116,7 @@ public class XMLConfigFileEditor implements ConfigFileEditor {
 				continue;
 			}
 			if (classType.equals(loggerName.getValue())) {
-				loggerParentNode.remove(childNode);
+				loggersParentNode.remove(childNode);
 				break;
 			}
 		}
@@ -177,11 +132,44 @@ public class XMLConfigFileEditor implements ConfigFileEditor {
 	@Override
 	public LogConfig readConfig() {
 
+		SAXReader reader = new SAXReader();
+		try {
+			configDocument = reader.read(configFile);
+			rootNode = configDocument.getRootElement();
+		} catch (DocumentException e) {
+			throw new LogHunterRuntimeException("Read Configure File Error!",
+					e, ExceptionConstraints.SYSTEM_ERROR);
+		}
+		
 		LogConfig config = new LogConfig();
 		Element root = configDocument.getRootElement();
 
 		// loggers
+		loggersParentNode = rootNode.element(LogConfigSchema.XML_LOGGERS);
+		loggerNodes = loggersParentNode.elements();
+		if (!Cats.collectionNotEmpty(loggerNodes)) {
+			throw new LogHunterRuntimeException("Logger element is required!",
+					ExceptionConstraints.LOG_CONFIG_ILLEGAL);
+		}
 
-		return null;
+		List<LoggerConfig> loggersList = new ArrayList<>();
+		for (Element element : loggerNodes) {
+			if (element.getName().equals(LogConfigSchema.XML_LOGGER)) {
+				LoggerConfig logger = new LoggerConfig();
+				logger.setClassType(element
+						.attributeValue(LogConfigSchema.XML_LOGGER_NAME));
+				logger.setLevel(LogLevel.valueOf(element
+						.attributeValue(LogConfigSchema.XML_LOGGER_LEVEL)));
+				loggersList.add(logger);
+			} else if (element.getName()
+					.equals(LogConfigSchema.XML_LOGGER_ROOT)) {
+				config.setRootLevel(LogLevel.valueOf(element
+						.attributeValue(LogConfigSchema.XML_LOGGER_LEVEL)));
+			}
+		}
+
+		config.setLoggers(loggersList);
+
+		return config;
 	}
 }

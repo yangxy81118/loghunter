@@ -6,5 +6,5 @@ package com.github.yangxy81118.loghunter.core.bean;
  *
  */
 public enum LogLevel {
-	all,trace,debug,info,error,fatal;
+	all,trace,debug,info,error,fatal,off;
 }

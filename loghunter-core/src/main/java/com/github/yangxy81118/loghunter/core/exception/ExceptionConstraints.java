@@ -6,4 +6,6 @@ public class ExceptionConstraints {
 
 	public static final int SYSTEM_ERROR = 9999;
 	
+	public static final int LOG_CONFIG_ILLEGAL = 9101;
+	
 }

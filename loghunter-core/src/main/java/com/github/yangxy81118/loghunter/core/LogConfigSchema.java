@@ -13,6 +13,8 @@ public class LogConfigSchema {
 	
 	public static final String XML_LOGGER = "Logger";
 	
+	public static final String XML_LOGGER_ROOT = "Root";
+	
 	public static final String XML_LOGGER_NAME = "name";
 	
 	public static final String XML_LOGGER_LEVEL = "level";

@@ -17,11 +17,14 @@ public class LogConfiguration {
  
 	private String configFileLocation = "log4j2.xml";
 	
-
-	public String getConfigfilelocation() {
+	public String getConfigFileLocation() {
 		return configFileLocation;
 	}
-	
+
+	public void setConfigFileLocation(String configFileLocation) {
+		this.configFileLocation = configFileLocation;
+	}
+
 	/**
 	 * 获取log4j2的配置的绝对路径
 	 * @return

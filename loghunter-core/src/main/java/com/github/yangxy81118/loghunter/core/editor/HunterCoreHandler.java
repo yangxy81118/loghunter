@@ -8,6 +8,7 @@ import org.apache.logging.log4j.core.LoggerContext;
 
 import com.github.yangxy81118.loghunter.core.bean.LogLevel;
 import com.github.yangxy81118.loghunter.core.conf.LogConfiguration;
+import com.github.yangxy81118.loghunter.core.conf.reader.LogConfigLocationScanner;
 import com.github.yangxy81118.loghunter.core.exception.ExceptionConstraints;
 import com.github.yangxy81118.loghunter.core.exception.LogHunterRuntimeException;
 import com.github.yangxy81118.loghunter.core.support.Cats;
@@ -62,7 +63,11 @@ public class HunterCoreHandler {
 	 * @param level
 	 */
 	public void changeLevel(String classType, LogLevel level) {
-		File configFile = LogConfiguration.getInstance().getConfigfile();
+//		File configFile = LogConfiguration.getInstance().getConfigfile();
+		
+		LogConfigLocationScanner scanner= new LogConfigLocationScanner();
+		scanner.scan();
+		File configFile = new File(scanner.getLogConfigFilePath());
 		ConfigFileEditor editor = getLogConfigEditeExcutor(configFile);
 		editor.changeClasslevel(classType, level);
 		reloadLoggerContext();
@@ -88,7 +93,7 @@ public class HunterCoreHandler {
 		String fileName = configFile.getName();
 		ConfigFileEditor executor = null;
 		if (fileName.endsWith(".xml")) {
-			executor = new XMLConfigFileEditor(configFile);
+			executor = new XMLLog4j2ConfigEditor(configFile);
 		} else {
 			throw new LogHunterRuntimeException(
 					"non-xml file does not been supported",
