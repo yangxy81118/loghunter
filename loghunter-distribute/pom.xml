@@ -11,7 +11,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>mine.xmz.loghunter</groupId>
-		<artifactId>loghunter-core</artifactId>
+			<artifactId>loghunter-core</artifactId>
 			<version>${loghunter-version}</version>
 		</dependency>
 		<dependency>

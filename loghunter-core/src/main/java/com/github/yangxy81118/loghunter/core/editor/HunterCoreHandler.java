@@ -63,10 +63,6 @@ public class HunterCoreHandler {
 	 * @param level
 	 */
 	public void changeLevel(String classType, LogLevel level) {
-//		File configFile = LogConfiguration.getInstance().getConfigfile();
-		
-		LogConfigLocationScanner scanner= new LogConfigLocationScanner();
-		scanner.scan();
 		File configFile = new File(scanner.getLogConfigFilePath());
 		ConfigFileEditor editor = getLogConfigEditeExcutor(configFile);
 		editor.changeClasslevel(classType, level);
@@ -74,6 +70,9 @@ public class HunterCoreHandler {
 	}
 
 	public void reloadLoggerContext() {
+
+		// log4j 与 log4j2
+
 		LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 		ctx.reconfigure();
 	}
@@ -103,6 +102,13 @@ public class HunterCoreHandler {
 	}
 
 	private static final HunterCoreHandler editor = new HunterCoreHandler();
+
+	private HunterCoreHandler() {
+		scanner = new LogConfigLocationScanner();
+		scanner.scan();
+	}
+
+	private LogConfigLocationScanner scanner;
 
 	public static final HunterCoreHandler getInstance() {
 		return editor;
